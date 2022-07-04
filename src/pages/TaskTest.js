@@ -44,7 +44,7 @@ export default function TaskTest() {
 
   const WorkerManagerStopBtn = () => {
     if (taskCheck) {
-      ThreadModule.startService();
+      ThreadModule.stopService();
       dispatch(backgroundTaskCheck(false));
     }
   };

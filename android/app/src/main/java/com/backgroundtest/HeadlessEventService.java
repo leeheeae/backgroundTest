@@ -15,7 +15,7 @@ public class HeadlessEventService extends HeadlessJsTaskService {
         return new HeadlessJsTaskConfig(
                 "HeadlessTaskService",
                 extras != null ? Arguments.fromBundle(extras) : Arguments.createMap(),
-                2000,
+                1000,
                 true);
     }
 }

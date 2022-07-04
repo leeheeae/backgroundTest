@@ -37,7 +37,7 @@ public class ThreadService extends Service {
             // 백그라운드 작업을 처리하는 동안 장치가 절전모드로 전환되지 않도록 웨이크 잠금을 획득
             HeadlessJsTaskService.acquireWakeLockNow(context);
             // delay 2초후에 핸들러 실행
-            handler.postDelayed(this, 2000);
+            handler.postDelayed(this, 1000);
         }
     };
 
@@ -69,7 +69,7 @@ public class ThreadService extends Service {
     public void onDestroy() {
         super.onDestroy();
         // runnable handler를 삭제
-        // this.handler.removeCallbacks(this.runnableCode);
+        this.handler.removeCallbacks(this.runnableCode);
     }
 
     // onStartCommand 서비스 실행하는 요청 메소드
@@ -80,16 +80,28 @@ public class ThreadService extends Service {
         Context context = getApplicationContext();
 
         createNotificationChannel();
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+        // Intent notificationIntent = new Intent(context, MainActivity.class);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent chackPendingIntent = PendingIntent.getActivity(context, 0,
                 notificationIntent,
-                PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        /*
+         * // https://developer.android.com/reference/android/app/PendingIntent#
+         * 안드로이드 12부터 PendingIntent에 인자 값으로 FLAG_UPDATE_CURRENT 일 경우 작동이 멈추는 이슈가 생김
+         * PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT로 작성해주면 에러가 사리짐
+         * FLAG_UPDATE_CURRENT : 설명된 PendingIntent가 이미 존재하는 경우 이를 유지하되 추가 데이터를 이 새
+         * Intent에 있는 것으로 대체함을 나타내는 플래그입니다.
+         * 
+         * 
+         * 
+         * Notificatino이 바로 실행되지 않는 이슈때문에 일어나는 것 같음
+         */
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("THREADTEST")
                 .setContentText("테스트")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(contentIntent)
+                .setContentIntent(chackPendingIntent)
                 .build();
 
         // // foreground 시작 startForeground(키, 실행할 값)
