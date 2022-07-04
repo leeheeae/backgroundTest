@@ -5,7 +5,7 @@ import store from './src/store';
 import {increment} from './src/slice/counter';
 import AppInner from './AppInner';
 
-export default function App() {
+function App() {
   LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
   LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -22,3 +22,5 @@ const HeadlessTask = async () => {
 };
 
 AppRegistry.registerHeadlessTask('HeadlessTaskService', () => HeadlessTask);
+
+export default App;

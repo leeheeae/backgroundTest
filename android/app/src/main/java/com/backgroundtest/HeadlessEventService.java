@@ -9,18 +9,13 @@ import javax.annotation.Nullable;
 
 public class HeadlessEventService extends HeadlessJsTaskService {
 
-    @Override
-    protected @Nullable HeadlessJsTaskConfig getTaskConfig(Intent intent) {
+    @Nullable
+    protected HeadlessJsTaskConfig getTaskConfig(Intent intent) {
         Bundle extras = intent.getExtras();
-        if (extras != null) {
-            return new HeadlessJsTaskConfig(
-                    "HeadlessTaskService",
-                    Arguments.fromBundle(extras),
-                    5000, // timeout for the task
-                    false // optional: defines whether or not the task is allowed in foreground. Default
-                          // is false
-            );
-        }
-        return null;
+        return new HeadlessJsTaskConfig(
+                "HeadlessTaskService",
+                extras != null ? Arguments.fromBundle(extras) : Arguments.createMap(),
+                2000,
+                true);
     }
 }

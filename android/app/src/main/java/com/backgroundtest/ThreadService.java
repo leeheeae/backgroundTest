@@ -24,6 +24,23 @@ public class ThreadService extends Service {
     private static final int NOTIFICATION_ID = 12345;
     private static final String CHANNEL_ID = "ThreadTest";
 
+    private Handler handler = new Handler();
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            // 실행되고 있는 애플리케이션
+            Context context = getApplicationContext();
+            // 헤드레스 config 설정
+            Intent myIntent = new Intent(context, HeadlessEventService.class);
+            context.startService(myIntent);
+
+            // 백그라운드 작업을 처리하는 동안 장치가 절전모드로 전환되지 않도록 웨이크 잠금을 획득
+            HeadlessJsTaskService.acquireWakeLockNow(context);
+            // delay 2초후에 핸들러 실행
+            handler.postDelayed(this, 2000);
+        }
+    };
+
     // notification 채널 생성
     private void createNotificationChannel() {
         // 26버전 이상만 실행
@@ -58,7 +75,8 @@ public class ThreadService extends Service {
     // onStartCommand 서비스 실행하는 요청 메소드
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // this.handler.post(this.runnableCode); // module의 startService()
+        this.handler.post(this.runnableCode); // module의 startService()
+
         Context context = getApplicationContext();
 
         createNotificationChannel();
