@@ -11,7 +11,7 @@ import TaskTest from '../pages/TaskTest';
 export default function Root() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="TaskTest">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={Home} options={{title: 'Home'}} />
         <Stack.Screen
           name="TaskTest"

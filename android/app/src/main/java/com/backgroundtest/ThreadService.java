@@ -80,9 +80,10 @@ public class ThreadService extends Service {
         Context context = getApplicationContext();
 
         createNotificationChannel();
-        // Intent notificationIntent = new Intent(context, MainActivity.class);
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent chackPendingIntent = PendingIntent.getActivity(context, 0,
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        PendingIntent chackPendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent,
                 PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
