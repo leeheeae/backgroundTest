@@ -13,6 +13,7 @@ public class MainActivity extends ReactActivity {
    * used to schedule
    * rendering of the component.
    */
+
   @Override
   protected String getMainComponentName() {
     return "backgroundTest";
@@ -20,7 +21,7 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(null);
+    super.onCreate(savedInstanceState);
   }
 
   /**

@@ -1,7 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.backgroundtest">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />    
+    <!-- foreground  -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- CPU가 켜진 상태를 유지-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
       android:name=".MainApplication"
@@ -10,6 +15,13 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+
+        <!-- 헤드레스 서비스 등록 -->
+        <service android:name="com.backgroundtest.HeadlessEventService" />
+        <service android:name="com.backgroundtest.ThreadService" />
+        <service android:name="com.backgroundtest.WorkService"
+            android:foregroundServiceType="location|microphone"/>
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -23,7 +35,10 @@
         </intent-filter>
       </activity>
 
-      <!-- 헤드레스 서비스 등록 -->
-      <service android:name="com.backgroundtest.HeadlessEventService" />
+    <receiver android:name=".NetworkChangeReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+        </intent-filter>
+    </receiver>
     </application>
 </manifest>

@@ -9,16 +9,24 @@ import com.facebook.react.bridge.ReactMethod;
 import android.widget.Toast;
 import android.content.Intent;
 import android.util.Log;
+import android.content.Context;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.WorkManager;
+import androidx.work.PeriodicWorkRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import com.facebook.react.util.RNLog;
 
 public class ThreadModule extends ReactContextBaseJavaModule {
-    ReactApplicationContext reactContext;
+    private ReactApplicationContext reactContext;
+    private PeriodicWorkRequest workRequest;
 
     ThreadModule(ReactApplicationContext context) {
         super(context);
+        reactContext = context;
+        workRequest = new PeriodicWorkRequest.Builder(WorkService.class, 10, TimeUnit.MILLISECONDS).build();
     }
 
     @Override
@@ -29,6 +37,29 @@ public class ThreadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void LogTest() {
         RNLog.e("LogTest");
+    }
+
+    @ReactMethod
+    public void startService() {
+        Intent dataIntent = new Intent(reactContext, ThreadService.class);
+        reactContext.startService(dataIntent);
+    }
+
+    @ReactMethod
+    public void stopService() {
+        reactContext.stopService(new Intent(reactContext,
+                ThreadService.class));
+    }
+
+    @ReactMethod
+    public void workerStart() {
+        WorkManager.getInstance().enqueueUniquePeriodicWork("WorkService", ExistingPeriodicWorkPolicy.KEEP,
+                workRequest);
+    }
+
+    @ReactMethod
+    public void workerStop() {
+        WorkManager.getInstance().cancelUniqueWork("WorkService");
     }
 
     @ReactMethod
